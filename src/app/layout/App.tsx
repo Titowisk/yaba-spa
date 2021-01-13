@@ -1,28 +1,27 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+
+import { Container, Grid, GridColumn } from 'semantic-ui-react';
+
 import { Nav } from '../features/nav/Nav';
 import { SideNavBar } from '../features/sidenavbar/SideNavBar';
-import { Layout } from 'antd';
+import { TransactionsTable } from '../features/transactions-table/TransactionsTable';
 
-import 'antd/dist/antd.css';
 import './styles.css';
 
-const { Header, Sider, Content } = Layout;
 
 const App = () => {
   return (
-    <div className="App">
-      <Layout >
-        <Header>
-          <Nav/>
-        </Header>
-      <Layout>
-        <Sider style={{ minHeight: '100vh' }}>
+    <Fragment>
+      <Nav/>
+      <Grid columns={2}>
+        <GridColumn width={2}>
           <SideNavBar/>
-        </Sider>
-        <Content>Content</Content>
-      </Layout>
-    </Layout>
-    </div>
+        </GridColumn>
+        <GridColumn columns={14}>
+          <TransactionsTable/>
+        </GridColumn>
+      </Grid>
+    </Fragment>
   );
 }
 

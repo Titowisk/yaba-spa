@@ -9,10 +9,10 @@ export const SideNavBar = () => {
           name='home'
         />
         <Menu.Item
-          name='messages'
+          name='Register Bank'
         />
         <Menu.Item
-          name='friends'
+          name='Transactions'
         />
       </Menu>
     </div>

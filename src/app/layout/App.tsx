@@ -17,8 +17,10 @@ const App = () => {
         <GridColumn width={2}>
           <SideNavBar/>
         </GridColumn>
-        <GridColumn columns={14}>
-          <TransactionsTable/>
+        <GridColumn columns={14} stretched width='14'>
+          <Container style={{paddingTop: 30}}>
+            <TransactionsTable/>
+          </Container>
         </GridColumn>
       </Grid>
     </Fragment>

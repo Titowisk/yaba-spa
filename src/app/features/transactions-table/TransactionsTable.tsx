@@ -1,17 +1,95 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Dropdown, Icon, Menu, Table } from 'semantic-ui-react'
 import { ITransaction } from '../../models/Transaction'
 
 export const TransactionsTable = () => {
   const [transactions, setTransactions] = useState<ITransaction[]>([])
+  /* Pagination */
   const [transactionPage, setTransactionPage] = useState<ITransaction[]>([])
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(15) 
   const [pagination, setPagination] = useState<number[]>([])
-  // transactionPage - store the current transactions shown on a page, when it changes it reloads the table
-  // numberOfPages = 15
-  // HandlePagination(transactions, numberOfPages) => transactionPage
+
+  /* Async Category Update */
+  /*edit cell
+    - picking a value from dropdown will change all other transactions of this month with equal origin
+    - picking a value from dropdown will also make a request to /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
+  */
+  const UpdateTransactionsWithSimilarOrigin = (transactionId: number, value: any) => {
+    console.log("UpdateTransactionsWithSimilarOrigin")
+    // console.log(`newCategoryId: ${newCategoryId}`)
+    // console.log(`newCategory: ${newCategory.value}`)
+
+    let newCategoryId: number = parseInt(value)
+
+    console.log(`newCategoryId: ${newCategoryId}`)
+
+    let transaction = transactions.find(t => t.id === transactionId)
+    let updatedTransactions = transactions.map(t => {
+      if(t.origin === transaction?.origin){
+        // t.category = categories.find(c => c.value === newCategoryId)?.value
+        t.category = newCategoryId
+      }
+      return t
+    })
+
+    // console.log(`transaction: ${transaction}`)
+    // console.log(`updatedTransactions: ${updatedTransactions}`)
+
+    setTransactions(updatedTransactions)
+
+    // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
+  }
+ 
+  // TODO: create endpoint to get categories of transaction
+  const categories = [
+    {
+      key: 1,
+      text: "Home Expenses",
+      value: 1,
+    },
+    {
+      key: 2,
+      text: "Transportation",
+      value: 2,
+    },
+    {
+      key: 3,
+      text: "Food",
+      value: 3,
+    },
+    {
+      key: 4,
+      text: "Clothing",
+      value: 4,
+    },
+    {
+      key: 5,
+      text: "Healthcare",
+      value: 5,
+    },
+    {
+      key: 6,
+      text: "Entertainment",
+      value: 6,
+    },
+    {
+      key: 7,
+      text: "Education",
+      value: 7,
+    },
+    {
+      key: 8,
+      text: "Savings",
+      value: 8,
+    },
+    {
+      key: 9,
+      text: "Personal",
+      value: 9,
+    }
+  ]
 
   const GetTransactions = () => 
   {
@@ -40,7 +118,6 @@ export const TransactionsTable = () => {
       return
     }
 
-
     setTransactionPage(transactionData.slice(startIndex, endIndex))
   }
 
@@ -62,13 +139,14 @@ export const TransactionsTable = () => {
       GetTransactions()
     }
     else {
+      console.log(`useEffect else`)
+      console.log(`transactions.length: ${transactions.length}`)
       HandlePagination(transactions)
     }
-    console.log(`useEffect`)
-    console.log(`pagination: ${pagination[pagination.length - 1]}`)
+    
     // console.log(`transactions: ${transactions}`)
     // console.log(`pagintransactionPageation: ${transactionPage}`)
-  }, [currentPage])
+  }, [currentPage, transactions])
 
   return (
     <div>
@@ -92,7 +170,16 @@ export const TransactionsTable = () => {
               <Table.Cell style={{textAlign: 'center'}}>
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(transaction.amount)}
               </Table.Cell>
-              <Table.Cell style={{textAlign: 'center'}}>{transaction.category}</Table.Cell>
+              <Table.Cell style={{textAlign: 'center'}} width={4}>
+                {/* {transaction.category} */}
+                <Dropdown
+                  defaultValue={transaction.category}
+                  onChange={(e, {value}) => UpdateTransactionsWithSimilarOrigin(transaction.id, value)}
+                  fluid
+                  selection
+                  options={categories}
+                />
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

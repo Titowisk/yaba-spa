@@ -136,6 +136,7 @@ export const TransactionsTable = () => {
                     as="a"
                     key={pageItem}
                     onClick={(e) => setCurrentPage(pageItem)}
+                    active={pageItem === currentPage}
                   >
                     {pageItem}
                   </Menu.Item>

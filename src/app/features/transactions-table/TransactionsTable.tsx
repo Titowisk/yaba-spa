@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Dropdown, Icon, Menu, Table } from "semantic-ui-react";
 import { ITransaction } from "../../models/Transaction";
 import { TransactionsBody } from "./TransactionsBody";
+import { TransactionsFooter } from "./TransactionsFooter";
 
 export const TransactionsTable = () => {
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
@@ -58,7 +59,6 @@ export const TransactionsTable = () => {
 
     if (endIndex === 0) {
       setTransactionPage(transactionData.slice(startIndex));
-      return;
     } else {
       setTransactionPage(transactionData.slice(startIndex, endIndex));
     }
@@ -119,40 +119,11 @@ export const TransactionsTable = () => {
             UpdateTransactionsWithSimilarOrigin
           }
         />
-        <Table.Footer>
-          <Table.Row>
-            <Table.HeaderCell colSpan="4">
-              <Menu floated="right" pagination>
-                <Menu.Item
-                  as="a"
-                  icon
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <Icon name="chevron left" />
-                </Menu.Item>
-                {pagination.map((pageItem) => (
-                  <Menu.Item
-                    as="a"
-                    key={pageItem}
-                    onClick={(e) => setCurrentPage(pageItem)}
-                    active={pageItem === currentPage}
-                  >
-                    {pageItem}
-                  </Menu.Item>
-                ))}
-                <Menu.Item
-                  as="a"
-                  icon
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === pagination[pagination.length - 1]}
-                >
-                  <Icon name="chevron right" />
-                </Menu.Item>
-              </Menu>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
+        <TransactionsFooter
+          currentPageNumber={currentPage}
+          setCurrentPage={setCurrentPage}
+          pagination={pagination}
+        />
       </Table>
     </div>
   );

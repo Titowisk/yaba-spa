@@ -106,9 +106,9 @@ export const TransactionsTable = () => {
     if (endIndex === 0) {
       setTransactionPage(transactionData.slice(startIndex));
       return;
+    } else {
+      setTransactionPage(transactionData.slice(startIndex, endIndex));
     }
-
-    setTransactionPage(transactionData.slice(startIndex, endIndex));
   };
 
   const CreatePages = (dataLength: number) => {
@@ -144,11 +144,14 @@ export const TransactionsTable = () => {
 
   // page changed
   useEffect(() => {
+    console.log("page changed");
+
     HandlePagination(transactions);
   }, [currentPage]);
 
   // table transactions changed
   useEffect(() => {
+    console.log("table transactions changed");
     HandlePagination(transactions);
   }, [transactions]);
 

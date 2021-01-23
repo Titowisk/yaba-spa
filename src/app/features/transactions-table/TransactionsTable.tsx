@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Dropdown, Icon, Menu, Table } from "semantic-ui-react";
 import { ITransaction } from "../../models/Transaction";
+import { TransactionsBody } from "./TransactionsBody";
 
 export const TransactionsTable = () => {
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
@@ -31,7 +32,6 @@ export const TransactionsTable = () => {
     let transaction = transactions.find((t) => t.id === transactionId);
     let updatedTransactions = transactions.map((t) => {
       if (t.origin === transaction?.origin) {
-        // t.category = categories.find(c => c.value === newCategoryId)?.value
         t.category = newCategoryId;
       }
       return t;
@@ -41,58 +41,11 @@ export const TransactionsTable = () => {
     // console.log(`updatedTransactions: ${updatedTransactions}`)
 
     setTransactions(updatedTransactions);
-
+    HandlePagination(transactions);
     // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
   };
 
   // TODO: create endpoint to get categories of transaction
-  const categories = [
-    {
-      key: 1,
-      text: "Home Expenses",
-      value: 1,
-    },
-    {
-      key: 2,
-      text: "Transportation",
-      value: 2,
-    },
-    {
-      key: 3,
-      text: "Food",
-      value: 3,
-    },
-    {
-      key: 4,
-      text: "Clothing",
-      value: 4,
-    },
-    {
-      key: 5,
-      text: "Healthcare",
-      value: 5,
-    },
-    {
-      key: 6,
-      text: "Entertainment",
-      value: 6,
-    },
-    {
-      key: 7,
-      text: "Education",
-      value: 7,
-    },
-    {
-      key: 8,
-      text: "Savings",
-      value: 8,
-    },
-    {
-      key: 9,
-      text: "Personal",
-      value: 9,
-    },
-  ];
 
   const HandlePagination = (transactionData: ITransaction[]) => {
     let totalOfPages = Math.ceil(transactionData.length / pageSize);
@@ -149,12 +102,6 @@ export const TransactionsTable = () => {
     HandlePagination(transactions);
   }, [currentPage]);
 
-  // table transactions changed
-  useEffect(() => {
-    console.log("table transactions changed");
-    HandlePagination(transactions);
-  }, [transactions]);
-
   return (
     <div>
       <Table celled selectable>
@@ -166,35 +113,12 @@ export const TransactionsTable = () => {
             <Table.HeaderCell>Category</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-
-        <Table.Body>
-          {transactionPage.map((transaction: ITransaction) => (
-            <Table.Row key={transaction.id}>
-              <Table.Cell style={{ textAlign: "center" }}>
-                {transaction.date}
-              </Table.Cell>
-              <Table.Cell>{transaction.origin}</Table.Cell>
-              <Table.Cell style={{ textAlign: "center" }}>
-                {new Intl.NumberFormat("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }).format(transaction.amount)}
-              </Table.Cell>
-              <Table.Cell style={{ textAlign: "center" }} width={4}>
-                {/* {transaction.category} */}
-                <Dropdown
-                  defaultValue={transaction.category}
-                  onChange={(e, { value }) =>
-                    UpdateTransactionsWithSimilarOrigin(transaction.id, value)
-                  }
-                  fluid
-                  selection
-                  options={categories}
-                />
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
+        <TransactionsBody
+          transactions={transactionPage}
+          UpdateTransactionsWithSimilarOrigin={
+            UpdateTransactionsWithSimilarOrigin
+          }
+        />
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan="4">

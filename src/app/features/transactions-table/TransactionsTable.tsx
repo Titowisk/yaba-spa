@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Table } from "semantic-ui-react";
+import agent from "../../api/agent";
 import { ITransaction } from "../../models/Transaction";
 import { TransactionsBody } from "./TransactionsBody";
 import { TransactionsFooter } from "./TransactionsFooter";
@@ -60,16 +60,16 @@ export const TransactionsTable = () => {
     };
 
     const GetTransactions = () => {
-      axios
-        .post<ITransaction[]>(
-          "https://localhost:5001/api/transactions/DevGetByDate",
-          { userId: 1, bankAccountId: 9, year: 2020, month: 1 }
-        )
-        .then((response) => {
-          setTransactions(response.data);
-          CreatePages(response.data.length);
-          // HandlePagination(response.data);
-        });
+      agent.Transactions.DevGetByDate({
+        userId: 1,
+        bankAccountId: 9,
+        year: 2020,
+        month: 1,
+      }).then((response) => {
+        setTransactions(response);
+        CreatePages(response.length);
+        // HandlePagination(response.data);
+      });
     };
 
     GetTransactions();

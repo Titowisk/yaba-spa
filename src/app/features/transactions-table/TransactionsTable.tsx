@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Dropdown, Icon, Menu, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { ITransaction } from "../../models/Transaction";
 import { TransactionsBody } from "./TransactionsBody";
 import { TransactionsFooter } from "./TransactionsFooter";
@@ -23,26 +23,23 @@ export const TransactionsTable = () => {
     value: any
   ) => {
     console.log("UpdateTransactionsWithSimilarOrigin");
-    // console.log(`newCategoryId: ${newCategoryId}`)
-    // console.log(`newCategory: ${newCategory.value}`)
 
     let newCategoryId: number = parseInt(value);
 
-    console.log(`newCategoryId: ${newCategoryId}`);
-
     let transaction = transactions.find((t) => t.id === transactionId);
-    let updatedTransactions = transactions.map((t) => {
-      if (t.origin === transaction?.origin) {
-        t.category = newCategoryId;
+    let updatedTransactions = transactions.map((currentTransaction) => {
+      if (currentTransaction.origin === transaction?.origin) {
+        return {
+          ...currentTransaction,
+          category: newCategoryId,
+        };
       }
-      return t;
+
+      return { ...currentTransaction };
     });
 
-    // console.log(`transaction: ${transaction}`)
-    // console.log(`updatedTransactions: ${updatedTransactions}`)
-
     setTransactions(updatedTransactions);
-    HandlePagination(transactions);
+    HandlePagination(updatedTransactions);
     // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
   };
 
@@ -53,9 +50,7 @@ export const TransactionsTable = () => {
     let startIndex = (currentPage - 1) * pageSize;
     let endIndex = (currentPage - totalOfPages) * pageSize;
 
-    // console.log("HandlePagination")
-    // console.log(`startIndex: ${startIndex}`)
-    // console.log(`endIndex: ${endIndex}`)
+    // console.log("HandlePagination");
 
     if (endIndex === 0) {
       setTransactionPage(transactionData.slice(startIndex));
@@ -64,21 +59,19 @@ export const TransactionsTable = () => {
     }
   };
 
-  const CreatePages = (dataLength: number) => {
-    // console.log("Create pages")
-    // console.log(`transactions.length: ${dataLength}`)
-    // console.log(`pageSize: ${pageSize}`)
-    let totalOfPages = dataLength / pageSize;
-    let pageArray = [];
-    for (let index = 1; index < totalOfPages + 1; index++) {
-      pageArray.push(index);
-    }
-
-    setPagination(pageArray);
-  };
-
-  // page was access for the first time
+  // page was accessed for the first time
   useEffect(() => {
+    const CreatePages = (dataLength: number) => {
+      // console.log("Create pages")
+      let totalOfPages = dataLength / pageSize;
+      let pageArray = [];
+      for (let index = 1; index < totalOfPages + 1; index++) {
+        pageArray.push(index);
+      }
+
+      setPagination(pageArray);
+    };
+
     const GetTransactions = () => {
       axios
         .post<ITransaction[]>(

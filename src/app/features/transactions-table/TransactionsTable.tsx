@@ -39,30 +39,17 @@ export const TransactionsTable = () => {
     });
 
     setTransactions(updatedTransactions);
-    HandlePagination(updatedTransactions);
+    // HandlePagination(updatedTransactions);
     // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
   };
 
   // TODO: create endpoint to get categories of transaction
 
-  const HandlePagination = (transactionData: ITransaction[]) => {
-    let totalOfPages = Math.ceil(transactionData.length / pageSize);
-    let startIndex = (currentPage - 1) * pageSize;
-    let endIndex = (currentPage - totalOfPages) * pageSize;
-
-    // console.log("HandlePagination");
-
-    if (endIndex === 0) {
-      setTransactionPage(transactionData.slice(startIndex));
-    } else {
-      setTransactionPage(transactionData.slice(startIndex, endIndex));
-    }
-  };
-
   // page was accessed for the first time
   useEffect(() => {
+    console.log("First Acess");
+
     const CreatePages = (dataLength: number) => {
-      // console.log("Create pages")
       let totalOfPages = dataLength / pageSize;
       let pageArray = [];
       for (let index = 1; index < totalOfPages + 1; index++) {
@@ -81,19 +68,33 @@ export const TransactionsTable = () => {
         .then((response) => {
           setTransactions(response.data);
           CreatePages(response.data.length);
-          HandlePagination(response.data);
+          // HandlePagination(response.data);
         });
     };
 
     GetTransactions();
-  }, []);
+  }, [pageSize]);
 
   // page changed
   useEffect(() => {
     console.log("page changed");
 
+    const HandlePagination = (transactionData: ITransaction[]) => {
+      let totalOfPages = Math.ceil(transactionData.length / pageSize);
+      let startIndex = (currentPage - 1) * pageSize;
+      let endIndex = (currentPage - totalOfPages) * pageSize;
+
+      // console.log("HandlePagination");
+
+      if (endIndex === 0) {
+        setTransactionPage(transactionData.slice(startIndex));
+      } else {
+        setTransactionPage(transactionData.slice(startIndex, endIndex));
+      }
+    };
+
     HandlePagination(transactions);
-  }, [currentPage]);
+  }, [currentPage, transactions, pageSize]);
 
   return (
     <div>

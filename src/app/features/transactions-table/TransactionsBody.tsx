@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, Table } from "semantic-ui-react";
-import { ITransaction } from "../../models/Transaction";
+import { ITransaction, Category } from "../../models/Transaction";
 
 interface IProps {
   transactions: ITransaction[];
@@ -76,6 +76,7 @@ export const TransactionsBody: React.FC<IProps> = ({
           <Table.Cell style={{ textAlign: "center" }} width={4}>
             {/* {transaction.category} */}
             <Dropdown
+              text={Category[transaction.category]}
               defaultValue={transaction.category}
               onChange={(e, { value }) =>
                 UpdateTransactionsWithSimilarOrigin(transaction.id, value)

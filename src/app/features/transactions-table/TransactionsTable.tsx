@@ -38,7 +38,7 @@ export const TransactionsTable = () => {
       return { ...currentTransaction };
     });
 
-    setTransactions(updatedTransactions);
+    setTransactions([...updatedTransactions]);
     // HandlePagination(updatedTransactions);
     // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
   };
@@ -77,19 +77,19 @@ export const TransactionsTable = () => {
 
   // page changed
   useEffect(() => {
-    console.log("page changed");
+    // console.log("page changed");
 
     const HandlePagination = (transactionData: ITransaction[]) => {
       let totalOfPages = Math.ceil(transactionData.length / pageSize);
       let startIndex = (currentPage - 1) * pageSize;
       let endIndex = (currentPage - totalOfPages) * pageSize;
 
-      // console.log("HandlePagination");
+      console.log("HandlePagination");
 
       if (endIndex === 0) {
-        setTransactionPage(transactionData.slice(startIndex));
+        setTransactionPage([...transactionData.slice(startIndex)]);
       } else {
-        setTransactionPage(transactionData.slice(startIndex, endIndex));
+        setTransactionPage([...transactionData.slice(startIndex, endIndex)]);
       }
     };
 
@@ -108,7 +108,7 @@ export const TransactionsTable = () => {
           </Table.Row>
         </Table.Header>
         <TransactionsBody
-          transactions={transactionPage}
+          transactions={[...transactionPage]}
           UpdateTransactionsWithSimilarOrigin={
             UpdateTransactionsWithSimilarOrigin
           }

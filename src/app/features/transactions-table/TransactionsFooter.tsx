@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export const TransactionsFooter: React.FC<IProps> = ({
-  pagination,
+  pagination: arrayOfPageNumbers,
   currentPageNumber,
   setCurrentPage,
 }) => {
@@ -25,7 +25,7 @@ export const TransactionsFooter: React.FC<IProps> = ({
             >
               <Icon name="chevron left" />
             </Menu.Item>
-            {pagination.map((pageNumber) => (
+            {arrayOfPageNumbers.map((pageNumber) => (
               <Menu.Item
                 as="a"
                 key={pageNumber}
@@ -39,7 +39,10 @@ export const TransactionsFooter: React.FC<IProps> = ({
               as="a"
               icon
               onClick={() => setCurrentPage(currentPageNumber + 1)}
-              disabled={currentPageNumber === pagination[pagination.length - 1]}
+              disabled={
+                currentPageNumber ===
+                arrayOfPageNumbers[arrayOfPageNumbers.length - 1]
+              }
             >
               <Icon name="chevron right" />
             </Menu.Item>

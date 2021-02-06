@@ -3,10 +3,10 @@ export interface ITransaction {
   origin: string;
   date: Date;
   amount: number;
-  category?: Category;
+  category: Category;
 }
 
-enum Category {
+export enum Category {
   Unknown = 0,
   HomeExpenses = 1,
   Transportation = 2,
@@ -16,5 +16,5 @@ enum Category {
   Entertainment = 6,
   Education = 7,
   Savings = 8,
-  Personal = 9
+  Personal = 9,
 }

@@ -1,20 +1,15 @@
-import React from 'react'
-import { Menu } from 'semantic-ui-react'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { Menu } from "semantic-ui-react";
 
 export const SideNavBar = () => {
   return (
     <div>
       <Menu pointing secondary vertical>
-        <Menu.Item
-          name='home'
-        />
-        <Menu.Item
-          name='Register Bank'
-        />
-        <Menu.Item
-          name='Transactions'
-        />
+        <Menu.Item as={NavLink} exact to="/" name="home" />
+        <Menu.Item name="Register Bank" />
+        <Menu.Item as={NavLink} to="/transactions" name="Transactions" />
       </Menu>
     </div>
-  )
-}
+  );
+};

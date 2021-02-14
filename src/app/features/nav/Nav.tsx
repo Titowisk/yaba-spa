@@ -1,15 +1,13 @@
-import React from 'react'
-import { Button, Menu } from 'semantic-ui-react'
+import React from "react";
+import { Link } from "react-router-dom";
+import { Button, Menu } from "semantic-ui-react";
 
 export const Nav = () => {
   return (
     <div>
       <Menu>
-        <Menu.Item
-          name='yaba'
-          content='Yaba'
-        />
-        <Menu.Menu position='right'>
+        <Menu.Item as={Link} to="/" name="yaba" content="Yaba" />
+        <Menu.Menu position="right">
           <Menu.Item>
             <Button secondary>Login</Button>
           </Menu.Item>
@@ -19,5 +17,5 @@ export const Nav = () => {
         </Menu.Menu>
       </Menu>
     </div>
-  )
-}
+  );
+};

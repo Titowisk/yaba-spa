@@ -1,30 +1,34 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
+import { Route } from "react-router-dom";
 
-import { Container, Grid, GridColumn } from 'semantic-ui-react';
+import { Container, Grid, GridColumn } from "semantic-ui-react";
+import { HomePage } from "../features/home/HomePage";
 
-import { Nav } from '../features/nav/Nav';
-import { SideNavBar } from '../features/sidenavbar/SideNavBar';
-import { TransactionsTable } from '../features/transactions-table/TransactionsTable';
+import { Nav } from "../features/nav/Nav";
+import { SideNavBar } from "../features/sidenavbar/SideNavBar";
+import { TransactionsTable } from "../features/transactions-table/TransactionsTable";
 
-import './styles.css';
-
+import "./styles.css";
 
 const App = () => {
   return (
     <Fragment>
-      <Nav/>
+      <Nav />
       <Grid columns={2}>
         <GridColumn width={2}>
-          <SideNavBar/>
+          <SideNavBar />
         </GridColumn>
-        <GridColumn columns={14} stretched width='14'>
-          <Container style={{paddingTop: 30}}>
-            <TransactionsTable/>
+        <GridColumn columns={14} stretched width="14">
+          <Container style={{ paddingTop: 30 }}>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/transactions" component={TransactionsTable} />
+            {/* <Route path="/registerBank" component={RegisterBank} /> */}
+            {/* <TransactionsTable/> */}
           </Container>
         </GridColumn>
       </Grid>
     </Fragment>
   );
-}
+};
 
 export default App;

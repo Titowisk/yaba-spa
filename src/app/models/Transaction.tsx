@@ -18,3 +18,9 @@ export enum Category {
   Savings = 8,
   Personal = 9,
 }
+
+export interface ICategorizeUserTransactionsDTO {
+  transactionId: number;
+  userId: number;
+  categoryId: number;
+}

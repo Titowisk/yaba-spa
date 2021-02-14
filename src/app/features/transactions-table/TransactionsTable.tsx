@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "semantic-ui-react";
 import agent from "../../api/agent";
-import { ITransaction } from "../../models/Transaction";
+import {
+  ICategorizeUserTransactionsDTO,
+  ITransaction,
+} from "../../models/Transaction";
 import { TransactionsBody } from "./TransactionsBody";
 import { TransactionsFooter } from "./TransactionsFooter";
 
@@ -23,24 +26,37 @@ export const TransactionsTable = () => {
     value: any
   ) => {
     console.log("UpdateTransactionsWithSimilarOrigin");
+    console.log(`transactionId: ${transactionId}, value: ${value}`);
 
     let newCategoryId: number = parseInt(value);
+    let body: ICategorizeUserTransactionsDTO = {
+      transactionId,
+      categoryId: newCategoryId,
+      userId: 1,
+    };
 
-    let transaction = transactions.find((t) => t.id === transactionId);
-    let updatedTransactions = transactions.map((currentTransaction) => {
-      if (currentTransaction.origin === transaction?.origin) {
-        return {
-          ...currentTransaction,
-          category: newCategoryId,
-        };
-      }
+    agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
+      .then(() => {
+        let transaction = transactions.find((t) => t.id === transactionId);
+        let updatedTransactions = transactions.map((currentTransaction) => {
+          if (currentTransaction.origin === transaction?.origin) {
+            return {
+              ...currentTransaction,
+              category: newCategoryId,
+            };
+          }
 
-      return { ...currentTransaction };
-    });
+          return { ...currentTransaction };
+        });
 
-    setTransactions([...updatedTransactions]);
-    // HandlePagination(updatedTransactions);
-    // TODO: request /api/transactions/CategorizeAllTransactionsWithSimilarOrigins
+        setTransactions([...updatedTransactions]);
+      })
+      .catch((error) => {
+        console.log(
+          "Erro na função: CategorizeAllTransactionsWithSimilarOrigins"
+        );
+        console.log(error);
+      });
   };
 
   // TODO: create endpoint to get categories of transaction

@@ -1,5 +1,8 @@
 import axios, { AxiosResponse } from "axios";
-import { ITransaction } from "../models/Transaction";
+import {
+  ICategorizeUserTransactionsDTO,
+  ITransaction,
+} from "../models/Transaction";
 
 axios.defaults.baseURL = "https://localhost:5001/api";
 
@@ -15,6 +18,13 @@ const Transactions = {
   //TODO: alterar o tipo do body
   DevGetByDate: (body: {}): Promise<ITransaction[]> =>
     requests.post("/transactions/DevGetByDate", body),
+  CategorizeAllTransactionsWithSimilarOrigins: (
+    body: ICategorizeUserTransactionsDTO
+  ) =>
+    requests.put(
+      "/transactions/CategorizeAllTransactionsWithSimilarOrigins",
+      body
+    ),
 };
 
 export default {

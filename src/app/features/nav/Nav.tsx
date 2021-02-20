@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Button, Menu } from "semantic-ui-react";
 
 export const Nav = () => {
@@ -12,7 +12,9 @@ export const Nav = () => {
             <Button secondary>Login</Button>
           </Menu.Item>
           <Menu.Item>
-            <Button primary>Register</Button>
+            <Button as={NavLink} to="/register-user" primary>
+              Register
+            </Button>
           </Menu.Item>
         </Menu.Menu>
       </Menu>

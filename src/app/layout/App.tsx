@@ -7,6 +7,7 @@ import { HomePage } from "../features/home/HomePage";
 import { Nav } from "../features/nav/Nav";
 import { SideNavBar } from "../features/sidenavbar/SideNavBar";
 import { TransactionsTable } from "../features/transactions-table/TransactionsTable";
+import { RegisterUser } from "../features/user/RegisterUser";
 
 import "./styles.css";
 
@@ -22,6 +23,7 @@ const App = () => {
           <Container style={{ paddingTop: 30 }}>
             <Route exact path="/" component={HomePage} />
             <Route path="/transactions" component={TransactionsTable} />
+            <Route path="/register-user" component={RegisterUser} />
             {/* <Route path="/registerBank" component={RegisterBank} /> */}
             {/* <TransactionsTable/> */}
           </Container>

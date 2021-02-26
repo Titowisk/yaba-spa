@@ -3,6 +3,7 @@ import {
   ICategorizeUserTransactionsDTO,
   ITransaction,
 } from "../models/Transaction";
+import { ISignInUserDTO } from "../models/User";
 
 axios.defaults.baseURL = "https://localhost:5001/api";
 
@@ -27,6 +28,12 @@ const Transactions = {
     ),
 };
 
+const Users = {
+  SignIn: (body: ISignInUserDTO) =>
+    requests.post("/auth/signin", body).then(responseBody),
+};
+
 export default {
   Transactions,
+  Users,
 };

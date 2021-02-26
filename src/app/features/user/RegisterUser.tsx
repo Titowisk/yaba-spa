@@ -1,10 +1,14 @@
 import { Formik, Form } from "formik";
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Button, Header, Segment } from "semantic-ui-react";
 import * as Yup from "yup";
+import agent from "../../api/agent";
 import MyTextInput from "../../common/form/MyTextInput";
+import { ISignInUserDTO } from "../../models/User";
 
 export const RegisterUser = () => {
+  const history = useHistory();
   const validationSchema = Yup.object({
     userName: Yup.string().required("Name is required"),
     email: Yup.string().email("Email must be valid").required(),
@@ -12,8 +16,14 @@ export const RegisterUser = () => {
   });
 
   function handleFormSubmit(values: any) {
-    // TODO: API create user
-    console.log("form submitted");
+    let userDTO: ISignInUserDTO = {
+      name: values.userName,
+      email: values.email,
+      password: values.password,
+    };
+    agent.Users.SignIn(userDTO).then((resp) => {
+      history.push("/home");
+    });
   }
 
   return (

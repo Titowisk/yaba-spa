@@ -1,11 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import {
   ICategorizeUserTransactionsDTO,
+  IGetByDateDTO,
   ITransaction,
 } from "../models/Transaction";
 import { IUser, ILoginUserDTO, ISignInUserDTO } from "../models/User";
+import { store } from "../stores/store";
 
 axios.defaults.baseURL = "https://localhost:5001/api";
+
+axios.interceptors.request.use((config) => {
+  const token = store.commonStore.token;
+
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 const requests = {
@@ -20,6 +29,8 @@ const Transactions = {
   //TODO: alterar o tipo do body
   DevGetByDate: (body: {}) =>
     requests.post<ITransaction[]>("/transactions/DevGetByDate", body),
+  GetByDate: (body: IGetByDateDTO) =>
+    requests.post<ITransaction[]>("transactions/GetByDate", body),
   CategorizeAllTransactionsWithSimilarOrigins: (
     body: ICategorizeUserTransactionsDTO
   ) =>

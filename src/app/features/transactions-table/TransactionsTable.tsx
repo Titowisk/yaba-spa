@@ -76,15 +76,13 @@ export const TransactionsTable = () => {
     };
 
     const GetTransactions = () => {
-      agent.Transactions.DevGetByDate({
-        userId: 1,
+      agent.Transactions.GetByDate({
         bankAccountId: 9,
         year: 2020,
         month: 1,
       }).then((response) => {
         setTransactions(response);
         CreatePages(response.length);
-        // HandlePagination(response.data);
       });
     };
 

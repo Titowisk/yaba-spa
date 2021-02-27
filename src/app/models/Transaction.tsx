@@ -24,3 +24,9 @@ export interface ICategorizeUserTransactionsDTO {
   userId: number;
   categoryId: number;
 }
+
+export interface IGetByDateDTO {
+  bankAccountId: number;
+  year: number;
+  month: number;
+}

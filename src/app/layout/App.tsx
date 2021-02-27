@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 import { Container, Grid, GridColumn } from "semantic-ui-react";
 import { HomePage } from "../features/home/HomePage";
 
-import { Nav } from "../features/nav/Nav";
+import Nav from "../features/nav/Nav";
 import { SideNavBar } from "../features/sidenavbar/SideNavBar";
 import { TransactionsTable } from "../features/transactions-table/TransactionsTable";
 import LoginUser from "../features/user/LoginUser";

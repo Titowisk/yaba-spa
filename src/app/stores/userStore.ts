@@ -1,11 +1,24 @@
-import { makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
+import agent from "../api/agent";
+import { ILoginUserDTO, ISignInUserDTO, IUser } from "../models/User";
 
 export default class UserStore {
-  title = "hello modafucka";
+  user: IUser | null = null;
 
   constructor() {
-    makeObservable(this, {
-      title: observable,
-    });
+    makeAutoObservable(this);
   }
+
+  get isLoggedIn() {
+    return !!this.user;
+  }
+
+  login = async (creds: ILoginUserDTO) => {
+    try {
+      const user = await agent.Users.Login(creds);
+      console.log(user);
+    } catch (error) {
+      throw error;
+    }
+  };
 }

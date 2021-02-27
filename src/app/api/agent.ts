@@ -3,34 +3,35 @@ import {
   ICategorizeUserTransactionsDTO,
   ITransaction,
 } from "../models/Transaction";
-import { ISignInUserDTO } from "../models/User";
+import { IUser, ILoginUserDTO, ISignInUserDTO } from "../models/User";
 
 axios.defaults.baseURL = "https://localhost:5001/api";
 
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 const requests = {
-  get: (url: string) => axios.get(url).then(responseBody),
-  post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
-  put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
-  delete: (url: string) => axios.delete(url).then(responseBody),
+  get: <T>(url: string) => axios.get<T>(url).then(responseBody),
+  post: <T>(url: string, body: {}) =>
+    axios.post<T>(url, body).then(responseBody),
+  put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  delete: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
 const Transactions = {
   //TODO: alterar o tipo do body
-  DevGetByDate: (body: {}): Promise<ITransaction[]> =>
-    requests.post("/transactions/DevGetByDate", body),
+  DevGetByDate: (body: {}) =>
+    requests.post<ITransaction[]>("/transactions/DevGetByDate", body),
   CategorizeAllTransactionsWithSimilarOrigins: (
     body: ICategorizeUserTransactionsDTO
   ) =>
-    requests.put(
+    requests.put<void>(
       "/transactions/CategorizeAllTransactionsWithSimilarOrigins",
       body
     ),
 };
 
 const Users = {
-  SignIn: (body: ISignInUserDTO) =>
-    requests.post("/auth/signin", body).then(responseBody),
+  SignIn: (body: ISignInUserDTO) => requests.post<void>("/auth/signin", body),
+  Login: (body: ILoginUserDTO) => requests.post<IUser>("/auth/login", body),
 };
 
 export default {

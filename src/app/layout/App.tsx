@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React, { Fragment } from "react";
 import { Route } from "react-router-dom";
 
@@ -7,11 +8,12 @@ import { HomePage } from "../features/home/HomePage";
 import { Nav } from "../features/nav/Nav";
 import { SideNavBar } from "../features/sidenavbar/SideNavBar";
 import { TransactionsTable } from "../features/transactions-table/TransactionsTable";
+import LoginUser from "../features/user/LoginUser";
 import { RegisterUser } from "../features/user/RegisterUser";
 
 import "./styles.css";
 
-const App = () => {
+function App() {
   return (
     <Fragment>
       <Nav />
@@ -24,13 +26,13 @@ const App = () => {
             <Route exact path="/" component={HomePage} />
             <Route path="/transactions" component={TransactionsTable} />
             <Route path="/register-user" component={RegisterUser} />
+            <Route path="/login-user" component={LoginUser} />
             {/* <Route path="/registerBank" component={RegisterBank} /> */}
-            {/* <TransactionsTable/> */}
           </Container>
         </GridColumn>
       </Grid>
     </Fragment>
   );
-};
+}
 
-export default App;
+export default observer(App);

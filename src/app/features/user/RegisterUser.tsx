@@ -48,10 +48,6 @@ export const RegisterUser = () => {
               name="email"
               placeholder="example@email.com"
             />
-            {/* <ErrorMessage
-                name="email"
-                render={(error) => <Label basic color="red" content={error} />}
-              /> */}
             <MyTextInput
               label="Password"
               type="password"

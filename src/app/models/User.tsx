@@ -3,3 +3,14 @@ export interface ISignInUserDTO {
   email: string;
   password: string;
 }
+
+export interface ILoginUserDTO {
+  email: string;
+  password: string;
+}
+
+export interface IUser {
+  name: string;
+  email: string;
+  token: string;
+}

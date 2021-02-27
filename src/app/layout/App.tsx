@@ -7,7 +7,7 @@ import { HomePage } from "../features/home/HomePage";
 
 import Nav from "../features/nav/Nav";
 import { SideNavBar } from "../features/sidenavbar/SideNavBar";
-import { TransactionsTable } from "../features/transactions-table/TransactionsTable";
+import TransactionsTable from "../features/transactions-table/TransactionsTable";
 import LoginUser from "../features/user/LoginUser";
 import { RegisterUser } from "../features/user/RegisterUser";
 

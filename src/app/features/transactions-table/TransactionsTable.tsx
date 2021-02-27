@@ -1,15 +1,19 @@
+import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { Table } from "semantic-ui-react";
 import agent from "../../api/agent";
 import {
   ICategorizeUserTransactionsDTO,
+  IGetByDateDTO,
   ITransaction,
 } from "../../models/Transaction";
+import { useStore } from "../../stores/store";
 import { TransactionsBody } from "./TransactionsBody";
 import { TransactionsFooter } from "./TransactionsFooter";
 
-export const TransactionsTable = () => {
-  const [transactions, setTransactions] = useState<ITransaction[]>([]);
+function TransactionsTable() {
+  const { transactionsStore } = useStore();
+  // const [transactions, setTransactions] = useState<ITransaction[]>([]);
   /* Pagination */
   const [transactionPage, setTransactionPage] = useState<ITransaction[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -37,19 +41,23 @@ export const TransactionsTable = () => {
 
     agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
       .then(() => {
-        let transaction = transactions.find((t) => t.id === transactionId);
-        let updatedTransactions = transactions.map((currentTransaction) => {
-          if (currentTransaction.origin === transaction?.origin) {
-            return {
-              ...currentTransaction,
-              category: newCategoryId,
-            };
+        let transaction = transactionsStore.transactions.find(
+          (t) => t.id === transactionId
+        );
+        let updatedTransactions = transactionsStore.transactions.map(
+          (currentTransaction) => {
+            if (currentTransaction.origin === transaction?.origin) {
+              return {
+                ...currentTransaction,
+                category: newCategoryId,
+              };
+            }
+
+            return { ...currentTransaction };
           }
-
-          return { ...currentTransaction };
-        });
-
-        setTransactions([...updatedTransactions]);
+        );
+        transactionsStore.updateTransactions([...updatedTransactions]);
+        // setTransactions([...updatedTransactions]);
       })
       .catch((error) => {
         console.log(
@@ -75,19 +83,24 @@ export const TransactionsTable = () => {
       setPagination(pageArray);
     };
 
-    const GetTransactions = () => {
-      agent.Transactions.GetByDate({
-        bankAccountId: 9,
-        year: 2020,
-        month: 1,
-      }).then((response) => {
-        setTransactions(response);
-        CreatePages(response.length);
-      });
-    };
+    let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
+    transactionsStore.loadTransactions(body).then(() => {
+      CreatePages(transactionsStore.transactions.length);
+    });
 
-    GetTransactions();
-  }, [pageSize]);
+    // const GetTransactions = () => {
+    //   agent.Transactions.GetByDate({
+    //     bankAccountId: 9,
+    //     year: 2020,
+    //     month: 1,
+    //   }).then((response) => {
+    //     setTransactions(response);
+    //     CreatePages(response.length);
+    //   });
+    // };
+
+    // GetTransactions();
+  }, [pageSize, transactionsStore]);
 
   // page changed
   useEffect(() => {
@@ -107,8 +120,8 @@ export const TransactionsTable = () => {
       }
     };
 
-    HandlePagination(transactions);
-  }, [currentPage, transactions, pageSize]);
+    HandlePagination(transactionsStore.transactions);
+  }, [currentPage, transactionsStore, pageSize]);
 
   return (
     <div>
@@ -135,4 +148,6 @@ export const TransactionsTable = () => {
       </Table>
     </div>
   );
-};
+}
+
+export default observer(TransactionsTable);

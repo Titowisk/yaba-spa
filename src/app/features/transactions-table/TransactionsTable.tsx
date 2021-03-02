@@ -8,17 +8,21 @@ import {
   ITransaction,
 } from "../../models/Transaction";
 import { useStore } from "../../stores/store";
-import { TransactionsBody } from "./TransactionsBody";
+import TransactionsBody from "./TransactionsBody";
 import { TransactionsFooter } from "./TransactionsFooter";
 
 function TransactionsTable() {
   const { transactionsStore } = useStore();
-  // const [transactions, setTransactions] = useState<ITransaction[]>([]);
-  /* Pagination */
-  const [transactionPage, setTransactionPage] = useState<ITransaction[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(15);
-  const [pagination, setPagination] = useState<number[]>([]);
+  const {
+    transactionRegistry: transactions,
+    currentPage,
+    allTransactions,
+    currentTransactionsPage,
+    pagesArray,
+    loadTransactions,
+    categorizeAllTransactionsWithSimilarOrigins,
+    setCurrentPage,
+  } = transactionsStore;
 
   /* Async Category Update */
   /*edit cell
@@ -41,22 +45,27 @@ function TransactionsTable() {
 
     agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
       .then(() => {
-        let transaction = transactionsStore.transactions.find(
-          (t) => t.id === transactionId
-        );
-        let updatedTransactions = transactionsStore.transactions.map(
-          (currentTransaction) => {
-            if (currentTransaction.origin === transaction?.origin) {
-              return {
-                ...currentTransaction,
-                category: newCategoryId,
-              };
-            }
+        // let transaction = transactions.find((t) => t.id === transactionId);
+        let transaction = transactions.get(transactionId);
+        // let updatedTransactions = transactions.map((currentTransaction) => {
+        //   if (currentTransaction.origin === transaction?.origin) {
+        //     return {
+        //       ...currentTransaction,
+        //       category: newCategoryId,
+        //     };
+        //   }
 
-            return { ...currentTransaction };
+        //   return { ...currentTransaction };
+        // });
+        let updatedTransactions = transactions.forEach(
+          (currentTransaction, id, map) => {
+            if (currentTransaction.origin === transaction?.origin) {
+              currentTransaction.origin = transaction?.origin;
+              map.set(id, currentTransaction);
+            }
           }
         );
-        transactionsStore.updateTransactions([...updatedTransactions]);
+        // transactionsStore.updateTransactions([...updatedTransactions]);
         // setTransactions([...updatedTransactions]);
       })
       .catch((error) => {
@@ -73,55 +82,9 @@ function TransactionsTable() {
   useEffect(() => {
     console.log("First Acess");
 
-    const CreatePages = (dataLength: number) => {
-      let totalOfPages = dataLength / pageSize;
-      let pageArray = [];
-      for (let index = 1; index < totalOfPages + 1; index++) {
-        pageArray.push(index);
-      }
-
-      setPagination(pageArray);
-    };
-
     let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
-    transactionsStore.loadTransactions(body).then(() => {
-      CreatePages(transactionsStore.transactions.length);
-    });
-
-    // const GetTransactions = () => {
-    //   agent.Transactions.GetByDate({
-    //     bankAccountId: 9,
-    //     year: 2020,
-    //     month: 1,
-    //   }).then((response) => {
-    //     setTransactions(response);
-    //     CreatePages(response.length);
-    //   });
-    // };
-
-    // GetTransactions();
-  }, [pageSize, transactionsStore]);
-
-  // page changed
-  useEffect(() => {
-    // console.log("page changed");
-
-    const HandlePagination = (transactionData: ITransaction[]) => {
-      let totalOfPages = Math.ceil(transactionData.length / pageSize);
-      let startIndex = (currentPage - 1) * pageSize;
-      let endIndex = (currentPage - totalOfPages) * pageSize;
-
-      console.log("HandlePagination");
-
-      if (endIndex === 0) {
-        setTransactionPage([...transactionData.slice(startIndex)]);
-      } else {
-        setTransactionPage([...transactionData.slice(startIndex, endIndex)]);
-      }
-    };
-
-    HandlePagination(transactionsStore.transactions);
-  }, [currentPage, transactionsStore, pageSize]);
+    loadTransactions(body);
+  }, [transactionsStore]);
 
   return (
     <div>
@@ -135,15 +98,15 @@ function TransactionsTable() {
           </Table.Row>
         </Table.Header>
         <TransactionsBody
-          transactions={[...transactionPage]}
+          transactions={currentTransactionsPage}
           UpdateTransactionsWithSimilarOrigin={
-            UpdateTransactionsWithSimilarOrigin
+            categorizeAllTransactionsWithSimilarOrigins
           }
         />
         <TransactionsFooter
           currentPageNumber={currentPage}
           setCurrentPage={setCurrentPage}
-          pagination={pagination}
+          pagination={pagesArray}
         />
       </Table>
     </div>

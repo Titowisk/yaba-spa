@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Dropdown, Table } from "semantic-ui-react";
 import { ITransaction, Category } from "../../models/Transaction";
@@ -7,10 +8,10 @@ interface IProps {
   UpdateTransactionsWithSimilarOrigin: (id: number, value: any) => void;
 }
 
-export const TransactionsBody: React.FC<IProps> = ({
+function TransactionsBody({
   transactions,
   UpdateTransactionsWithSimilarOrigin,
-}) => {
+}: IProps) {
   const categories = [
     {
       key: 1,
@@ -90,4 +91,6 @@ export const TransactionsBody: React.FC<IProps> = ({
       ))}
     </Table.Body>
   );
-};
+}
+
+export default observer(TransactionsBody);

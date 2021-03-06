@@ -2,16 +2,14 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { Dropdown, Table } from "semantic-ui-react";
 import { ITransaction, Category } from "../../models/Transaction";
+import { useStore } from "../../stores/store";
 
-interface IProps {
-  transactions: ITransaction[];
-  UpdateTransactionsWithSimilarOrigin: (id: number, value: any) => void;
-}
-
-function TransactionsBody({
-  transactions,
-  UpdateTransactionsWithSimilarOrigin,
-}: IProps) {
+function TransactionsBody() {
+  const { transactionsStore } = useStore();
+  const {
+    categorizeAllTransactionsWithSimilarOrigins,
+    currentTransactionsPage: transactions,
+  } = transactionsStore;
   const categories = [
     {
       key: 1,
@@ -75,12 +73,14 @@ function TransactionsBody({
             }).format(transaction.amount)}
           </Table.Cell>
           <Table.Cell style={{ textAlign: "center" }} width={4}>
-            {/* {transaction.category} */}
             <Dropdown
               text={Category[transaction.category]}
               defaultValue={transaction.category}
               onChange={(e, { value }) =>
-                UpdateTransactionsWithSimilarOrigin(transaction.id, value)
+                categorizeAllTransactionsWithSimilarOrigins(
+                  transaction.id,
+                  value
+                )
               }
               fluid
               selection

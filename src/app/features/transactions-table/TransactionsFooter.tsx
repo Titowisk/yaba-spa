@@ -1,17 +1,15 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Icon, Menu, Table } from "semantic-ui-react";
+import { useStore } from "../../stores/store";
 
-interface IProps {
-  pagination: number[];
-  currentPageNumber: number;
-  setCurrentPage: (pageNumber: number) => void;
-}
-
-export const TransactionsFooter: React.FC<IProps> = ({
-  pagination: arrayOfPageNumbers,
-  currentPageNumber,
-  setCurrentPage,
-}) => {
+function TransactionsFooter() {
+  const { transactionsStore } = useStore();
+  const {
+    pagesArray: pagination,
+    currentPage,
+    setCurrentPage,
+  } = transactionsStore;
   return (
     <Table.Footer>
       <Table.Row>
@@ -20,17 +18,17 @@ export const TransactionsFooter: React.FC<IProps> = ({
             <Menu.Item
               as="a"
               icon
-              onClick={() => setCurrentPage(currentPageNumber - 1)}
-              disabled={currentPageNumber === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
             >
               <Icon name="chevron left" />
             </Menu.Item>
-            {arrayOfPageNumbers.map((pageNumber) => (
+            {pagination.map((pageNumber) => (
               <Menu.Item
                 as="a"
                 key={pageNumber}
                 onClick={(e) => setCurrentPage(pageNumber)}
-                active={pageNumber === currentPageNumber}
+                active={pageNumber === currentPage}
               >
                 {pageNumber}
               </Menu.Item>
@@ -38,11 +36,8 @@ export const TransactionsFooter: React.FC<IProps> = ({
             <Menu.Item
               as="a"
               icon
-              onClick={() => setCurrentPage(currentPageNumber + 1)}
-              disabled={
-                currentPageNumber ===
-                arrayOfPageNumbers[arrayOfPageNumbers.length - 1]
-              }
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === pagination[pagination.length - 1]}
             >
               <Icon name="chevron right" />
             </Menu.Item>
@@ -51,4 +46,6 @@ export const TransactionsFooter: React.FC<IProps> = ({
       </Table.Row>
     </Table.Footer>
   );
-};
+}
+
+export default observer(TransactionsFooter);

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import {
   ICategorizeUserTransactionsDTO,
@@ -71,7 +71,7 @@ export default class TransactionStore {
     this.currentPage = n;
   };
 
-  categorizeAllTransactionsWithSimilarOrigins = (
+  categorizeAllTransactionsWithSimilarOrigins = async (
     transactionId: number,
     value: any
   ) => {
@@ -82,14 +82,16 @@ export default class TransactionStore {
       userId: 1,
     };
 
-    agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
+    await agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
       .then(() => {
         let transaction = this.transactionRegistry.get(transactionId);
 
         this.transactionRegistry.forEach((currentTransaction, id, map) => {
-          if (currentTransaction.origin === transaction?.origin) {
-            currentTransaction.origin = transaction?.origin;
-            map.set(id, currentTransaction);
+          if (currentTransaction.origin === transaction!.origin) {
+            runInAction(() => {
+              currentTransaction.origin = transaction!.origin;
+              map.set(id, currentTransaction);
+            });
           }
         });
       })

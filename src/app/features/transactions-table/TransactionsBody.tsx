@@ -74,8 +74,10 @@ function TransactionsBody() {
           </Table.Cell>
           <Table.Cell style={{ textAlign: "center" }} width={4}>
             <Dropdown
-              text={Category[transaction.category]}
-              defaultValue={transaction.category}
+              text={
+                transaction.categoryId ? Category[transaction.categoryId] : ""
+              }
+              defaultValue={transaction.categoryId ?? ""}
               onChange={(e, { value }) =>
                 categorizeAllTransactionsWithSimilarOrigins(
                   transaction.id,

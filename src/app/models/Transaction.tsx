@@ -3,7 +3,7 @@ export interface ITransaction {
   origin: string;
   date: Date;
   amount: number;
-  category: Category;
+  categoryId: Category | null;
 }
 
 export enum Category {

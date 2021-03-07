@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import {
+  CategoryDTO,
   ICategorizeUserTransactionsDTO,
   IGetByDateDTO,
   ITransaction,
@@ -11,6 +12,7 @@ export default class TransactionStore {
   paginatedTransactions: ITransaction[] = [];
   currentPage: number = 1;
   pageSize: number = 15;
+  categories: CategoryDTO[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -54,7 +56,6 @@ export default class TransactionStore {
       this.transactionRegistry.set(transaction.id, transaction)
     );
   };
-  // setPaginatedTransactions;
 
   loadTransactions = async (body: IGetByDateDTO) => {
     try {
@@ -65,6 +66,11 @@ export default class TransactionStore {
     } catch (error) {
       throw error;
     }
+  };
+
+  loadCategories = async () => {
+    const categoryList = await agent.Transactions.GetCategories();
+    this.categories = categoryList;
   };
 
   setCurrentPage = (n: number) => {

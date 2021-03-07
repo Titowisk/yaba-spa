@@ -30,3 +30,9 @@ export interface IGetByDateDTO {
   year: number;
   month: number;
 }
+
+export interface CategoryDTO {
+  key: number;
+  text: number;
+  name: string;
+}

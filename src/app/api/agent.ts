@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  CategoryDTO,
   ICategorizeUserTransactionsDTO,
   IGetByDateDTO,
   ITransaction,
@@ -38,6 +39,8 @@ const Transactions = {
       "/transactions/CategorizeAllTransactionsWithSimilarOrigins",
       body
     ),
+  GetCategories: () =>
+    requests.get<CategoryDTO[]>("transactions/GetCategories"),
 };
 
 const Users = {

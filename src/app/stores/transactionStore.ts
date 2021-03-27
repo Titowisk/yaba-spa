@@ -14,6 +14,8 @@ export default class TransactionStore {
   pageSize: number = 15;
   categories: CategoryDTO[] = [];
 
+  isUpdating: boolean = false;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -32,6 +34,7 @@ export default class TransactionStore {
   }
 
   get currentTransactionsPage(): ITransaction[] {
+    console.log("currentTransactionsPage");
     let startIndex = (this.currentPage - 1) * this.pageSize;
     let endIndex = (this.currentPage - this.totalOfPages) * this.pageSize;
     if (endIndex === 0) {
@@ -69,6 +72,7 @@ export default class TransactionStore {
   };
 
   loadCategories = async () => {
+    console.log("loadCategories()");
     const categoryList = await agent.Transactions.GetCategories();
     this.categories = categoryList;
   };
@@ -87,7 +91,7 @@ export default class TransactionStore {
       categoryId: newCategoryId,
       userId: 1,
     };
-
+    this.isUpdating = true;
     await agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
       .then(() => {
         let transaction = this.transactionRegistry.get(transactionId);
@@ -100,12 +104,15 @@ export default class TransactionStore {
             });
           }
         });
+        let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
+        this.loadTransactions(body);
       })
       .catch((error) => {
         console.log(
           "Erro na função: CategorizeAllTransactionsWithSimilarOrigins"
         );
         console.log(error);
-      });
+      })
+      .finally(() => (this.isUpdating = false));
   };
 }

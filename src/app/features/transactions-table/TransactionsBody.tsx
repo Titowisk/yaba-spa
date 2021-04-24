@@ -18,6 +18,8 @@ function TransactionsBody() {
     loadCategories();
   }, [transactionsStore]);
 
+  if (!transactions) return <Table.Body>Oops</Table.Body>;
+
   return (
     <Table.Body>
       {transactions.map((transaction: ITransaction) => (

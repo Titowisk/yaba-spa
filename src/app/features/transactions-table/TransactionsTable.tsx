@@ -1,12 +1,9 @@
+import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { Button, ButtonGroup, Grid, GridRow, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import agent from "../../api/agent";
-import {
-  GetTransactionDatesDTO,
-  ICategorizeUserTransactionsDTO,
-  IGetByDateDTO,
-} from "../../models/Transaction";
+import { GetTransactionDatesDTO } from "../../models/Transaction";
 import { useStore } from "../../stores/store";
 import TransactionsBody from "./TransactionsBody";
 import TransactionsDateMenu from "./TransactionsDateMenu";
@@ -31,13 +28,19 @@ function TransactionsTable() {
     var body1: GetTransactionDatesDTO = { userId: user!.id, bankAccountId: 1 };
     loadTransactionDates({ userId: user!.id, bankAccountId: 9 }).then(() => {
       // let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
+    });
+  }, [transactionsStore]);
+
+  autorun(() => {
+    if (currentSelectedMonth !== null && currentSelectedMonth > 0) {
+      console.log(`Autorun: current month changed: ${currentSelectedMonth}`);
       loadTransactions({
         bankAccountId: 9,
         year: currentSelectedYear,
         month: currentSelectedMonth,
       });
-    });
-  }, [transactionsStore]);
+    }
+  });
 
   return (
     <div>

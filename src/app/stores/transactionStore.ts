@@ -165,6 +165,7 @@ export default class TransactionStore {
 
   setCurrentYear = (year: number) => {
     this.currentSelectedYear = year;
+    this.currentSelectedMonth = null;
   };
 
   setCurrentMonth = (month: number) => {

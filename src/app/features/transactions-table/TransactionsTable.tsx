@@ -9,6 +9,7 @@ import {
 } from "../../models/Transaction";
 import { useStore } from "../../stores/store";
 import TransactionsBody from "./TransactionsBody";
+import TransactionsDateMenu from "./TransactionsDateMenu";
 import TransactionsFooter from "./TransactionsFooter";
 
 function TransactionsTable() {
@@ -16,12 +17,8 @@ function TransactionsTable() {
   const {
     loadTransactions,
     loadTransactionDates,
-    setCurrentYear,
-    setCurrentMonth,
     currentSelectedYear,
     currentSelectedMonth,
-    transactionYears,
-    monthsOfTransactionYear,
   } = transactionsStore;
   const { user } = userStore;
   // TODO: create endpoint to get categories of transaction
@@ -44,34 +41,7 @@ function TransactionsTable() {
 
   return (
     <div>
-      <Grid>
-        <GridRow>
-          <ButtonGroup>
-            {transactionYears.map((year) => (
-              <Button onClick={() => setCurrentYear(year)}>{year}</Button>
-            ))}
-          </ButtonGroup>
-        </GridRow>
-        <GridRow>
-          <ButtonGroup>
-            {monthsOfTransactionYear?.map((month) => (
-              <Button onClick={() => setCurrentMonth(month)}>{month}</Button>
-            ))}
-            {/* <Button disabled>Jan</Button>
-            <Button>Fev</Button>
-            <Button>Mar</Button>
-            <Button>Apr</Button>
-            <Button>May</Button>
-            <Button>Jun</Button>
-            <Button>Jul</Button>
-            <Button>Aug</Button>
-            <Button>Sep</Button>
-            <Button>Oct</Button>
-            <Button>Nov</Button>
-            <Button>Dec</Button> */}
-          </ButtonGroup>
-        </GridRow>
-      </Grid>
+      <TransactionsDateMenu />
 
       <Table celled selectable>
         <Table.Header>

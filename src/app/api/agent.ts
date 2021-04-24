@@ -53,6 +53,7 @@ const Transactions = {
 const Users = {
   SignIn: (body: ISignInUserDTO) => requests.post<void>("/auth/signin", body),
   Login: (body: ILoginUserDTO) => requests.post<IUser>("/auth/login", body),
+  GetCurrent: () => requests.get<IUser>("auth/GetCurrentUser"),
 };
 
 export default {

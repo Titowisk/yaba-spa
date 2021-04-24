@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Route } from "react-router-dom";
 
 import { Container, Grid, GridColumn } from "semantic-ui-react";
@@ -10,10 +10,20 @@ import { SideNavBar } from "../features/sidenavbar/SideNavBar";
 import TransactionsTable from "../features/transactions-table/TransactionsTable";
 import LoginUser from "../features/user/LoginUser";
 import { RegisterUser } from "../features/user/RegisterUser";
+import { useStore } from "../stores/store";
 
 import "./styles.css";
 
 function App() {
+  const { commonStore, userStore } = useStore();
+  const { token } = commonStore;
+  const { getUser } = userStore;
+
+  useEffect(() => {
+    if (token) {
+      getUser();
+    }
+  }, [commonStore, userStore]);
   return (
     <Fragment>
       <Nav />

@@ -1,4 +1,4 @@
-import { autorun } from "mobx";
+import { autorun, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { Table } from "semantic-ui-react";
@@ -17,30 +17,33 @@ function TransactionsTable() {
     currentSelectedYear,
     currentSelectedMonth,
   } = transactionsStore;
-  const { user } = userStore;
+  const { user, isLoggedIn } = userStore;
   // TODO: create endpoint to get categories of transaction
 
   // page was accessed for the first time
   useEffect(() => {
-    console.log("First Acess");
-    if (user === null) console.log("Nuuuuuuuuuuuuul"); // TODO: handle unauthorized user
+    console.log(`useEffect: isLoggedIn: ${isLoggedIn}`);
+    if (isLoggedIn) {
+      var body1: GetTransactionDatesDTO = {
+        userId: user!.id,
+        bankAccountId: 1,
+      };
+      loadTransactionDates({ userId: user!.id, bankAccountId: 9 }).then(() => {
+        // let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
+      });
+    } // TODO: handle unauthorized user
+  }, [isLoggedIn]);
 
-    var body1: GetTransactionDatesDTO = { userId: user!.id, bankAccountId: 1 };
-    loadTransactionDates({ userId: user!.id, bankAccountId: 9 }).then(() => {
-      // let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
-    });
-  }, [transactionsStore]);
-
-  autorun(() => {
+  useEffect(() => {
     if (currentSelectedMonth !== null && currentSelectedMonth > 0) {
-      console.log(`Autorun: current month changed: ${currentSelectedMonth}`);
+      console.log(`useEffect: current month changed: ${currentSelectedMonth}`);
       loadTransactions({
         bankAccountId: 9,
         year: currentSelectedYear,
         month: currentSelectedMonth,
       });
     }
-  });
+  }, [currentSelectedMonth]);
 
   return (
     <div>

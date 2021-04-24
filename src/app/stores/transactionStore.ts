@@ -2,19 +2,24 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import {
   CategoryDTO,
+  GetTransactionDatesDTO,
   ICategorizeUserTransactionsDTO,
   IGetByDateDTO,
   ITransaction,
+  TransactionDate,
 } from "../models/Transaction";
 
 export default class TransactionStore {
   transactionRegistry = new Map<number, ITransaction>();
+  transactionDatesRegistry = new Map<number, number[]>();
   paginatedTransactions: ITransaction[] = [];
   currentPage: number = 1;
   pageSize: number = 15;
   categories: CategoryDTO[] = [];
-
   isUpdating: boolean = false;
+
+  currentSelectedYear: number | null = null;
+  currentSelectedMonth: number | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -52,6 +57,21 @@ export default class TransactionStore {
     return pageArray;
   }
 
+  get transactionYears(): number[] {
+    return Array.from(this.transactionDatesRegistry.keys());
+  }
+
+  get monthsOfTransactionYear(): number[] | null {
+    if (this.currentSelectedYear === null) return [];
+    else {
+      let year = <number>this.currentSelectedYear;
+      let months = this.transactionDatesRegistry.get(year);
+      if (months === undefined) return null;
+
+      return months;
+    }
+  }
+
   // actions
   setTransactions = (transactions: ITransaction[]) => {
     this.transactionRegistry.clear();
@@ -60,12 +80,39 @@ export default class TransactionStore {
     );
   };
 
+  setTransactionDates = (transactionDates: TransactionDate[]) => {
+    this.transactionDatesRegistry.clear();
+    transactionDates.forEach((transactionDate) =>
+      this.transactionDatesRegistry.set(
+        transactionDate.year,
+        transactionDate.months
+      )
+    );
+    this.currentSelectedYear = this.transactionYears[0];
+
+    let months = this.monthsOfTransactionYear;
+    if (months === null) this.currentSelectedMonth = null;
+    else this.currentSelectedMonth = months[0];
+  };
+
   loadTransactions = async (body: IGetByDateDTO) => {
     try {
       const transactions = await agent.Transactions.GetByDate(body);
       // this.transactionRegistry.clear();
       // transactions.forEach(transaction => this.transactionRegistry.set(transaction.id, transaction));
       this.setTransactions(transactions);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  loadTransactionDates = async (body: GetTransactionDatesDTO) => {
+    console.log("loadTransactionDates");
+    try {
+      const transactionDates = await agent.Transactions.GetTransactionDates(
+        body
+      );
+      this.setTransactionDates(transactionDates);
     } catch (error) {
       throw error;
     }
@@ -114,5 +161,13 @@ export default class TransactionStore {
         console.log(error);
       })
       .finally(() => (this.isUpdating = false));
+  };
+
+  setCurrentYear = (year: number) => {
+    this.currentSelectedYear = year;
+  };
+
+  setCurrentMonth = (month: number) => {
+    this.currentSelectedMonth = month;
   };
 }

@@ -1,9 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import {
   CategoryDTO,
+  GetTransactionDatesDTO,
   ICategorizeUserTransactionsDTO,
   IGetByDateDTO,
   ITransaction,
+  TransactionDate,
 } from "../models/Transaction";
 import { IUser, ILoginUserDTO, ISignInUserDTO } from "../models/User";
 import { store } from "../stores/store";
@@ -41,6 +43,11 @@ const Transactions = {
     ),
   GetCategories: () =>
     requests.get<CategoryDTO[]>("transactions/GetCategories"),
+  GetTransactionDates: (body: GetTransactionDatesDTO) =>
+    requests.post<TransactionDate[]>(
+      "transactions/GetTransactionDatesByUser",
+      body
+    ),
 };
 
 const Users = {

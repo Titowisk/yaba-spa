@@ -27,12 +27,22 @@ export interface ICategorizeUserTransactionsDTO {
 
 export interface IGetByDateDTO {
   bankAccountId: number;
-  year: number;
-  month: number;
+  year: number | null;
+  month: number | null;
 }
 
 export interface CategoryDTO {
   key: number;
   text: number;
   name: string;
+}
+
+export interface TransactionDate {
+  year: number;
+  months: number[];
+}
+
+export interface GetTransactionDatesDTO {
+  userId: number;
+  bankAccountId: number;
 }

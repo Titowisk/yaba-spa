@@ -41,7 +41,7 @@ export default class TransactionStore {
   get currentTransactionsPage(): ITransaction[] {
     console.log("currentTransactionsPage");
     let startIndex = (this.currentPage - 1) * this.pageSize;
-    let endIndex = (this.currentPage - this.totalOfPages) * this.pageSize;
+    let endIndex = startIndex + this.pageSize;
     if (endIndex === 0) {
       return this.allTransactions.slice(startIndex);
     } else {

@@ -151,7 +151,11 @@ export default class TransactionStore {
             });
           }
         });
-        let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
+        let body: IGetByDateDTO = {
+          bankAccountId: 9,
+          year: this.currentSelectedYear,
+          month: this.currentSelectedMonth,
+        };
         this.loadTransactions(body);
       })
       .catch((error) => {

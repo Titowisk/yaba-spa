@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { BankAccount } from "../models/BankAccount";
 import {
   CategoryDTO,
   GetTransactionDatesDTO,
@@ -56,7 +57,13 @@ const Users = {
   GetCurrent: () => requests.get<IUser>("auth/GetCurrentUser"),
 };
 
+const BankAccounts = {
+  GetBankAccounts: () =>
+    requests.get<BankAccount[]>("bankAccounts/GetBankAccountsByUser"),
+};
+
 export default {
   Transactions,
   Users,
+  BankAccounts,
 };

@@ -130,13 +130,13 @@ export default class TransactionStore {
 
   categorizeAllTransactionsWithSimilarOrigins = async (
     transactionId: number,
+    bankAccountId: number,
     value: any
   ) => {
     let newCategoryId: number = parseInt(value);
     let body: ICategorizeUserTransactionsDTO = {
       transactionId,
       categoryId: newCategoryId,
-      userId: 1,
     };
     this.isUpdating = true;
     await agent.Transactions.CategorizeAllTransactionsWithSimilarOrigins(body)
@@ -152,7 +152,7 @@ export default class TransactionStore {
           }
         });
         let body: IGetByDateDTO = {
-          bankAccountId: 9,
+          bankAccountId: bankAccountId,
           year: this.currentSelectedYear,
           month: this.currentSelectedMonth,
         };

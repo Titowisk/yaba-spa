@@ -21,7 +21,6 @@ export enum Category {
 
 export interface ICategorizeUserTransactionsDTO {
   transactionId: number;
-  userId: number;
   categoryId: number;
 }
 

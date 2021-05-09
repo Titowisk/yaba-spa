@@ -7,7 +7,7 @@ export const SideNavBar = () => {
     <div>
       <Menu pointing secondary vertical>
         <Menu.Item as={NavLink} exact to="/" name="home" />
-        <Menu.Item name="Register Bank" />
+        <Menu.Item as={NavLink} to="/banks" name="Bank Menu" />
         <Menu.Item as={NavLink} to="/transactions" name="Transactions" />
       </Menu>
     </div>

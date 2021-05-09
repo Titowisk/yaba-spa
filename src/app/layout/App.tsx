@@ -3,6 +3,7 @@ import React, { Fragment, useEffect } from "react";
 import { Route } from "react-router-dom";
 
 import { Container, Grid, GridColumn } from "semantic-ui-react";
+import BankMenu from "../features/bank-menu/BankMenu";
 import { HomePage } from "../features/home/HomePage";
 
 import Nav from "../features/nav/Nav";
@@ -20,7 +21,7 @@ function App() {
   const { getUser } = userStore;
 
   useEffect(() => {
-    if (token) {
+    if (!token || token.length === 0) {
       getUser();
     }
   }, [commonStore, userStore]);
@@ -37,7 +38,7 @@ function App() {
             <Route path="/transactions" component={TransactionsTable} />
             <Route path="/register-user" component={RegisterUser} />
             <Route path="/login-user" component={LoginUser} />
-            {/* <Route path="/registerBank" component={RegisterBank} /> */}
+            <Route path="/banks" component={BankMenu} />
           </Container>
         </GridColumn>
       </Grid>

@@ -43,6 +43,7 @@ function TransactionsBody() {
               onChange={(e, { value }) =>
                 categorizeAllTransactionsWithSimilarOrigins(
                   transaction.id,
+                  9,
                   value
                 )
               }

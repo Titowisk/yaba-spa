@@ -4,7 +4,7 @@ import { BankAccount } from "../models/BankAccount";
 
 export default class BankAccountStore {
   bankAccountRegistry = new Map<number, BankAccount>();
-  selectedBakAccountId: number | null = null;
+  selectedBankAccountId: number = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -21,6 +21,11 @@ export default class BankAccountStore {
     bankAccounts.forEach((bankAccount) =>
       this.bankAccountRegistry.set(bankAccount.id, bankAccount)
     );
+  };
+
+  setSelectedBankAccount = (id: number) => {
+    console.log(`BankAccount: ${id}`);
+    this.selectedBankAccountId = id;
   };
 
   loadBankAccounts = async () => {

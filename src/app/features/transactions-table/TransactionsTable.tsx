@@ -10,7 +10,7 @@ import TransactionsDateMenu from "./TransactionsDateMenu";
 import TransactionsFooter from "./TransactionsFooter";
 
 function TransactionsTable() {
-  const { transactionsStore, userStore } = useStore();
+  const { transactionsStore, userStore, bankAccountsStore } = useStore();
   const {
     loadTransactions,
     loadTransactionDates,
@@ -18,19 +18,17 @@ function TransactionsTable() {
     currentSelectedMonth,
   } = transactionsStore;
   const { user, isLoggedIn } = userStore;
+  const { selectedBankAccountId } = bankAccountsStore;
   // TODO: create endpoint to get categories of transaction
 
   // page was accessed for the first time
   useEffect(() => {
     console.log(`useEffect: isLoggedIn: ${isLoggedIn}`);
     if (isLoggedIn) {
-      var body1: GetTransactionDatesDTO = {
+      loadTransactionDates({
         userId: user!.id,
-        bankAccountId: 1,
-      };
-      loadTransactionDates({ userId: user!.id, bankAccountId: 9 }).then(() => {
-        // let body: IGetByDateDTO = { bankAccountId: 9, year: 2020, month: 1 };
-      });
+        bankAccountId: selectedBankAccountId,
+      }).then(() => {});
     } // TODO: handle unauthorized user
   }, [isLoggedIn]);
 
@@ -38,7 +36,7 @@ function TransactionsTable() {
     if (currentSelectedMonth !== null && currentSelectedMonth > 0) {
       console.log(`useEffect: current month changed: ${currentSelectedMonth}`);
       loadTransactions({
-        bankAccountId: 9,
+        bankAccountId: selectedBankAccountId,
         year: currentSelectedYear,
         month: currentSelectedMonth,
       });

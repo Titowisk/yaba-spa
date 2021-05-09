@@ -5,11 +5,20 @@ import { BankAccount } from "../../models/BankAccount";
 import { useStore } from "../../stores/store";
 
 function BankMenu() {
-  const { bankAccountsStore } = useStore();
-  const { allBankAccounts, loadBankAccounts } = bankAccountsStore;
+  const { bankAccountsStore, userStore } = useStore();
+  const {
+    allBankAccounts,
+    selectedBankAccountId,
+    loadBankAccounts,
+    setSelectedBankAccount,
+  } = bankAccountsStore;
+
+  const { isLoggedIn } = userStore;
 
   useEffect(() => {
-    loadBankAccounts();
+    if (isLoggedIn) {
+      loadBankAccounts();
+    }
   }, [bankAccountsStore]);
 
   return (
@@ -17,7 +26,11 @@ function BankMenu() {
       <Grid container columns={3}>
         {allBankAccounts.map((bankAccount: BankAccount) => (
           <GridColumn>
-            <Button key={bankAccount.id}>
+            <Button
+              active={selectedBankAccountId === bankAccount.id}
+              key={bankAccount.id}
+              onClick={() => setSelectedBankAccount(bankAccount.id)}
+            >
               <Card>
                 <Card.Content header={bankAccount.bankName} />
                 <Card.Content description={`Agency: ${bankAccount.agency}`} />

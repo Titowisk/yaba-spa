@@ -6,6 +6,8 @@ export default class BankAccountStore {
   bankAccountRegistry = new Map<number, BankAccount>();
   selectedBankAccountId: number = 0;
 
+  loading: boolean = false;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -30,11 +32,14 @@ export default class BankAccountStore {
 
   loadBankAccounts = async () => {
     try {
+      this.loading = true;
       const bankAccounts = await agent.BankAccounts.GetBankAccounts();
 
       this.setBankAccounts(bankAccounts);
     } catch (error) {
       throw error;
+    } finally {
+      this.loading = false;
     }
   };
 }

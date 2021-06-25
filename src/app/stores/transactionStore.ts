@@ -18,15 +18,20 @@ export default class TransactionStore {
   pageSize: number = 15;
   categories: CategoryDTO[] = [];
   isUpdating: boolean = false;
+
   // balance summary by month
   totalVolume: number = 0;
-  totalExpense: number  = 0;
-  totalIncome: number  = 0;
-  incomePercentage: number  = 0;
-  expensePercentage: number  = 0;
+  totalExpense: number = 0;
+  totalIncome: number = 0;
+  incomePercentage: number = 0;
+  expensePercentage: number = 0;
 
+  // date menu
   currentSelectedYear: number | null = null;
   currentSelectedMonth: number | null = null;
+
+  // loading
+  loading: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -108,22 +113,23 @@ export default class TransactionStore {
     this.totalExpense = summary.totalExpense;
     this.incomePercentage = summary.incomePercentage;
     this.expensePercentage = summary.expensePercentage;
-  }
+  };
 
   loadTransactions = async (body: IGetByDateDTO) => {
     try {
+      this.loading = true;
       const transactionsSummary = await agent.Transactions.GetByDate(body);
-      // this.transactionRegistry.clear();
-      // transactions.forEach(transaction => this.transactionRegistry.set(transaction.id, transaction));
       this.setTransactions(transactionsSummary.transactions);
       this.setBalanceSummary(transactionsSummary);
     } catch (error) {
       throw error;
+    } finally {
+      this.loading = false;
     }
   };
 
   loadTransactionDates = async (body: GetTransactionDatesDTO) => {
-    console.log("loadTransactionDates");
+    // console.log("loadTransactionDates");
     try {
       const transactionDates = await agent.Transactions.GetTransactionDates(
         body
@@ -135,7 +141,7 @@ export default class TransactionStore {
   };
 
   loadCategories = async () => {
-    console.log("loadCategories()");
+    // console.log("loadCategories()");
     const categoryList = await agent.Transactions.GetCategories();
     this.categories = categoryList;
   };

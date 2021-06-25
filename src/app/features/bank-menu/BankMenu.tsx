@@ -1,6 +1,16 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { Button, Card, Grid, GridColumn, Icon } from "semantic-ui-react";
+import {
+  Button,
+  Card,
+  Dimmer,
+  DimmerDimmable,
+  Grid,
+  GridColumn,
+  Icon,
+  Loader,
+} from "semantic-ui-react";
+import LoadingComponent from "../../layout/LoadingComponent";
 import { BankAccount } from "../../models/BankAccount";
 import { useStore } from "../../stores/store";
 
@@ -11,6 +21,7 @@ function BankMenu() {
     selectedBankAccountId,
     loadBankAccounts,
     setSelectedBankAccount,
+    loading,
   } = bankAccountsStore;
 
   const { isLoggedIn } = userStore;
@@ -20,6 +31,8 @@ function BankMenu() {
       loadBankAccounts();
     }
   }, [bankAccountsStore]);
+
+  if (loading) return <LoadingComponent />;
 
   return (
     <div>

@@ -1,13 +1,14 @@
 import { autorun, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { Table } from "semantic-ui-react";
+import { Grid, GridColumn, GridRow, Table } from "semantic-ui-react";
 import agent from "../../api/agent";
 import { GetTransactionDatesDTO } from "../../models/Transaction";
 import { useStore } from "../../stores/store";
 import TransactionsBody from "./TransactionsBody";
 import TransactionsDateMenu from "./TransactionsDateMenu";
 import TransactionsFooter from "./TransactionsFooter";
+import TransactionsSummary from "./TransactionsSummary";
 
 function TransactionsTable() {
   const { transactionsStore, userStore, bankAccountsStore } = useStore();
@@ -45,20 +46,33 @@ function TransactionsTable() {
 
   return (
     <div>
-      <TransactionsDateMenu />
+      <Grid  columns={2}>
+        <GridRow>
+          <GridColumn width={8}>
+            <TransactionsDateMenu />
+          </GridColumn>
+          <GridColumn width={8}>
+            <TransactionsSummary />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn width={16}>
+            <Table celled selectable>
+              <Table.Header>
+                <Table.Row textAlign="center">
+                  <Table.HeaderCell>Date</Table.HeaderCell>
+                  <Table.HeaderCell>Origin</Table.HeaderCell>
+                  <Table.HeaderCell>Amount</Table.HeaderCell>
+                  <Table.HeaderCell>Category</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <TransactionsBody />
+              <TransactionsFooter />
+            </Table>
+          </GridColumn>
+        </GridRow>
 
-      <Table celled selectable>
-        <Table.Header>
-          <Table.Row textAlign="center">
-            <Table.HeaderCell>Date</Table.HeaderCell>
-            <Table.HeaderCell>Origin</Table.HeaderCell>
-            <Table.HeaderCell>Amount</Table.HeaderCell>
-            <Table.HeaderCell>Category</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <TransactionsBody />
-        <TransactionsFooter />
-      </Table>
+      </Grid>
     </div>
   );
 }

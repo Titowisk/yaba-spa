@@ -26,6 +26,8 @@ export enum Category {
   Education = 7,
   Savings = 8,
   Personal = 9,
+
+  Income = 99
 }
 
 export interface ICategorizeUserTransactionsDTO {

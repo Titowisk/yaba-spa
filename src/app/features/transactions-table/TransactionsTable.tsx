@@ -1,17 +1,7 @@
-import { autorun, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import {
-  Dimmer,
-  DimmerDimmable,
-  Grid,
-  GridColumn,
-  GridRow,
-  Loader,
-  Table,
-} from "semantic-ui-react";
-import agent from "../../api/agent";
-import { GetTransactionDatesDTO } from "../../models/Transaction";
+import { Grid, GridColumn, GridRow, Table } from "semantic-ui-react";
+import LoadingComponent from "../../layout/LoadingComponent";
 import { useStore } from "../../stores/store";
 import TransactionsBody from "./TransactionsBody";
 import TransactionsDateMenu from "./TransactionsDateMenu";
@@ -61,33 +51,29 @@ function TransactionsTable() {
             <TransactionsDateMenu />
           </GridColumn>
           <GridColumn width={8}>
-            <DimmerDimmable blurring dimmed={loading}>
-              <Dimmer active={loading}>
-                <Loader />
-              </Dimmer>
-              <TransactionsSummary />
-            </DimmerDimmable>
+            {loading ? <LoadingComponent /> : <TransactionsSummary />}
           </GridColumn>
         </GridRow>
         <GridRow>
-          <GridColumn width={16}>
-            <DimmerDimmable blurring dimmed={loading}>
-              <Dimmer active={loading}>
-                <Loader />
-              </Dimmer>
-              <Table celled selectable>
-                <Table.Header>
-                  <Table.Row textAlign="center">
-                    <Table.HeaderCell>Date</Table.HeaderCell>
-                    <Table.HeaderCell>Origin</Table.HeaderCell>
-                    <Table.HeaderCell>Amount</Table.HeaderCell>
-                    <Table.HeaderCell>Category</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
+          <GridColumn width={16} verticalAlign="middle">
+            <Table celled selectable>
+              <Table.Header>
+                <Table.Row textAlign="center">
+                  <Table.HeaderCell>Date</Table.HeaderCell>
+                  <Table.HeaderCell>Origin</Table.HeaderCell>
+                  <Table.HeaderCell>Amount</Table.HeaderCell>
+                  <Table.HeaderCell>Category</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              {loading ? (
+                <Table.Body>
+                  <LoadingComponent />
+                </Table.Body>
+              ) : (
                 <TransactionsBody />
-                <TransactionsFooter />
-              </Table>
-            </DimmerDimmable>
+              )}
+              <TransactionsFooter />
+            </Table>
           </GridColumn>
         </GridRow>
       </Grid>

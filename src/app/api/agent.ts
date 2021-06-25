@@ -7,6 +7,7 @@ import {
   IGetByDateDTO,
   ITransaction,
   TransactionDate,
+  TransactionsSummary,
 } from "../models/Transaction";
 import { IUser, ILoginUserDTO, ISignInUserDTO } from "../models/User";
 import { store } from "../stores/store";
@@ -34,7 +35,7 @@ const Transactions = {
   DevGetByDate: (body: {}) =>
     requests.post<ITransaction[]>("/transactions/DevGetByDate", body),
   GetByDate: (body: IGetByDateDTO) =>
-    requests.post<ITransaction[]>("transactions/GetByDate", body),
+    requests.post<TransactionsSummary>("transactions/GetByDate", body),
   CategorizeAllTransactionsWithSimilarOrigins: (
     body: ICategorizeUserTransactionsDTO
   ) =>

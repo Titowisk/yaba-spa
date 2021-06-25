@@ -6,6 +6,15 @@ export interface ITransaction {
   categoryId: Category | null;
 }
 
+export interface TransactionsSummary {
+  transactions: ITransaction[],
+  totalVolume: number;
+  totalExpense: number;
+  totalIncome: number;
+  incomePercentage: number;
+  expensePercentage: number;
+}
+
 export enum Category {
   Unknown = 0,
   HomeExpenses = 1,

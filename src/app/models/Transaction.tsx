@@ -6,6 +6,15 @@ export interface ITransaction {
   categoryId: Category | null;
 }
 
+export interface TransactionsSummary {
+  transactions: ITransaction[],
+  totalVolume: number;
+  totalExpense: number;
+  totalIncome: number;
+  incomePercentage: number;
+  expensePercentage: number;
+}
+
 export enum Category {
   Unknown = 0,
   HomeExpenses = 1,
@@ -17,6 +26,8 @@ export enum Category {
   Education = 7,
   Savings = 8,
   Personal = 9,
+
+  Income = 99
 }
 
 export interface ICategorizeUserTransactionsDTO {

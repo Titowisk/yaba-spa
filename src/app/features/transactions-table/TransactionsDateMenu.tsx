@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Button, ButtonGroup, Grid, GridRow } from "semantic-ui-react";
+import { Button, ButtonGroup, Grid, GridColumn, GridRow } from "semantic-ui-react";
 import { useStore } from "../../stores/store";
 
 function TransactionsDateMenu() {
@@ -15,42 +15,35 @@ function TransactionsDateMenu() {
   } = transactionsStore;
   return (
     <div>
-      <Grid>
+      <Grid columns={1}>
         <GridRow>
-          <ButtonGroup>
-            {transactionYears.map((year) => (
-              <Button
-                active={year === currentSelectedYear}
-                onClick={() => setCurrentYear(year)}
-              >
-                {year}
-              </Button>
-            ))}
-          </ButtonGroup>
+          <GridColumn>
+            <ButtonGroup>
+              {transactionYears.map((year) => (
+                <Button
+                  active={year === currentSelectedYear}
+                  onClick={() => setCurrentYear(year)}
+                >
+                  {year}
+                </Button>
+              ))}
+            </ButtonGroup>
+
+          </GridColumn>
         </GridRow>
         <GridRow>
-          <ButtonGroup>
-            {monthsOfTransactionYear?.map((month) => (
-              <Button
-                active={month === currentSelectedMonth}
-                onClick={() => setCurrentMonth(month)}
-              >
-                {month}
-              </Button>
-            ))}
-            {/* <Button disabled>Jan</Button>
-            <Button>Fev</Button>
-            <Button>Mar</Button>
-            <Button>Apr</Button>
-            <Button>May</Button>
-            <Button>Jun</Button>
-            <Button>Jul</Button>
-            <Button>Aug</Button>
-            <Button>Sep</Button>
-            <Button>Oct</Button>
-            <Button>Nov</Button>
-            <Button>Dec</Button> */}
-          </ButtonGroup>
+          <GridColumn>
+            <ButtonGroup>
+              {monthsOfTransactionYear?.map((month) => (
+                <Button
+                  active={month === currentSelectedMonth}
+                  onClick={() => setCurrentMonth(month)}
+                >
+                  {month}
+                </Button>
+              ))}
+            </ButtonGroup>
+          </GridColumn>
         </GridRow>
       </Grid>
     </div>

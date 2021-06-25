@@ -7,6 +7,7 @@ import {
   IGetByDateDTO,
   ITransaction,
   TransactionDate,
+  TransactionsSummary,
 } from "../models/Transaction";
 
 export default class TransactionStore {
@@ -17,6 +18,12 @@ export default class TransactionStore {
   pageSize: number = 15;
   categories: CategoryDTO[] = [];
   isUpdating: boolean = false;
+  // balance summary by month
+  totalVolume: number = 0;
+  totalExpense: number  = 0;
+  totalIncome: number  = 0;
+  incomePercentage: number  = 0;
+  expensePercentage: number  = 0;
 
   currentSelectedYear: number | null = null;
   currentSelectedMonth: number | null = null;
@@ -95,12 +102,21 @@ export default class TransactionStore {
     else this.currentSelectedMonth = months[0];
   };
 
+  setBalanceSummary = (summary: TransactionsSummary) => {
+    this.totalVolume = summary.totalVolume;
+    this.totalIncome = summary.totalIncome;
+    this.totalExpense = summary.totalExpense;
+    this.incomePercentage = summary.incomePercentage;
+    this.expensePercentage = summary.expensePercentage;
+  }
+
   loadTransactions = async (body: IGetByDateDTO) => {
     try {
-      const transactions = await agent.Transactions.GetByDate(body);
+      const transactionsSummary = await agent.Transactions.GetByDate(body);
       // this.transactionRegistry.clear();
       // transactions.forEach(transaction => this.transactionRegistry.set(transaction.id, transaction));
-      this.setTransactions(transactions);
+      this.setTransactions(transactionsSummary.transactions);
+      this.setBalanceSummary(transactionsSummary);
     } catch (error) {
       throw error;
     }

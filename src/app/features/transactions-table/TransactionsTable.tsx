@@ -1,7 +1,15 @@
 import { autorun, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { Grid, GridColumn, GridRow, Table } from "semantic-ui-react";
+import {
+  Dimmer,
+  DimmerDimmable,
+  Grid,
+  GridColumn,
+  GridRow,
+  Loader,
+  Table,
+} from "semantic-ui-react";
 import agent from "../../api/agent";
 import { GetTransactionDatesDTO } from "../../models/Transaction";
 import { useStore } from "../../stores/store";
@@ -17,6 +25,7 @@ function TransactionsTable() {
     loadTransactionDates,
     currentSelectedYear,
     currentSelectedMonth,
+    loading,
   } = transactionsStore;
   const { user, isLoggedIn } = userStore;
   const { selectedBankAccountId } = bankAccountsStore;
@@ -24,7 +33,7 @@ function TransactionsTable() {
 
   // page was accessed for the first time
   useEffect(() => {
-    console.log(`useEffect: isLoggedIn: ${isLoggedIn}`);
+    // console.log(`useEffect: isLoggedIn: ${isLoggedIn}`);
     if (isLoggedIn) {
       loadTransactionDates({
         userId: user!.id,
@@ -35,7 +44,7 @@ function TransactionsTable() {
 
   useEffect(() => {
     if (currentSelectedMonth !== null && currentSelectedMonth > 0) {
-      console.log(`useEffect: current month changed: ${currentSelectedMonth}`);
+      // console.log(`useEffect: current month changed: ${currentSelectedMonth}`);
       loadTransactions({
         bankAccountId: selectedBankAccountId,
         year: currentSelectedYear,
@@ -46,32 +55,41 @@ function TransactionsTable() {
 
   return (
     <div>
-      <Grid  columns={2}>
+      <Grid columns={2}>
         <GridRow>
           <GridColumn width={8}>
             <TransactionsDateMenu />
           </GridColumn>
           <GridColumn width={8}>
-            <TransactionsSummary />
+            <DimmerDimmable blurring dimmed={loading}>
+              <Dimmer active={loading}>
+                <Loader />
+              </Dimmer>
+              <TransactionsSummary />
+            </DimmerDimmable>
           </GridColumn>
         </GridRow>
         <GridRow>
           <GridColumn width={16}>
-            <Table celled selectable>
-              <Table.Header>
-                <Table.Row textAlign="center">
-                  <Table.HeaderCell>Date</Table.HeaderCell>
-                  <Table.HeaderCell>Origin</Table.HeaderCell>
-                  <Table.HeaderCell>Amount</Table.HeaderCell>
-                  <Table.HeaderCell>Category</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <TransactionsBody />
-              <TransactionsFooter />
-            </Table>
+            <DimmerDimmable blurring dimmed={loading}>
+              <Dimmer active={loading}>
+                <Loader />
+              </Dimmer>
+              <Table celled selectable>
+                <Table.Header>
+                  <Table.Row textAlign="center">
+                    <Table.HeaderCell>Date</Table.HeaderCell>
+                    <Table.HeaderCell>Origin</Table.HeaderCell>
+                    <Table.HeaderCell>Amount</Table.HeaderCell>
+                    <Table.HeaderCell>Category</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <TransactionsBody />
+                <TransactionsFooter />
+              </Table>
+            </DimmerDimmable>
           </GridColumn>
         </GridRow>
-
       </Grid>
     </div>
   );
